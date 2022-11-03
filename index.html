@@ -1,22 +1,579 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Tab</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    <!-- <link rel="stylesheet" href="/css/index.css" /> -->
+    <!-- <script src="/scripts/scripts.js"></script> -->
+    <style>
+      /* Box sizing rules */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
 
-<body>
+      /* Remove default margin */
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      p,
+      figure,
+      blockquote,
+      dl,
+      dd {
+        margin: 0;
+      }
 
-    <div class="container">
+      /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+      ul[role="list"],
+      ol[role="list"] {
+        list-style: none;
+      }
 
+      /* Set core root defaults */
+      html:focus-within {
+        scroll-behavior: smooth;
+      }
 
+      /* Set core body defaults */
+      body {
+        min-height: 100vh;
+        text-rendering: optimizeSpeed;
+        line-height: 1.5;
+      }
 
+      /* A elements that don't have a class get default styles */
+      a:not([class]) {
+        text-decoration-skip-ink: auto;
+      }
+
+      /* Make images easier to work with */
+      img,
+      picture {
+        max-width: 100%;
+        display: block;
+      }
+
+      /* Inherit fonts for inputs and buttons */
+      input,
+      button,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+      @media (prefers-reduced-motion: reduce) {
+        html:focus-within {
+          scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+      /* ----- REPLACE STRING ----- */
+      /* ------ GAMEBOY COLOR PALETTE MAKER ------ */
+      /* ------ GAMEBOY DARK HUE MAKER -------- */
+      /* ------ GAMEBOY LIGHT HUE MAKER -------- */
+      /* ------ FULL STEP COLOR SWAPPER ------ */
+      /* ------- SIMPLE GRADIENT ------- */
+      :root {
+        --g1: rgb(98, 0, 234);
+        --g2: rgb(236, 64, 122);
+        --g3: rgb(253, 216, 53);
+      }
+
+      .wrapper {
+        background-color: #212121;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      .bgwrap {
+        display: grid;
+        place-items: center;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
+        position: absolute;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      #bg {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        opacity: 0.05;
+        filter: blur(5px);
+        transition: 500ms;
+      }
+      #bg.loaded {
+        opacity: 1;
+        filter: blur(0px);
+      }
+
+      .searchbar {
+        display: flex;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .searchbar input {
+        background-color: rgba(0, 0, 0, 0.5058823529);
+        backdrop-filter: blur(3px);
+        border: none;
+        border-radius: 8px 0 0 8px;
+        border: 2px solid rgba(255, 255, 255, 0.153);
+        border-right: none;
+        width: 10vw;
+        min-width: fit-content;
+        padding: 0 0 0 0.5rem;
+        margin: 0;
+        color: rgb(185, 185, 185);
+      }
+      .searchbar input:focus {
+        outline: none;
+      }
+      .searchbar .submit {
+        border: 2px solid rgba(255, 255, 255, 0.153);
+        border-left: none;
+        background: rgba(0, 0, 0, 0.6470588235);
+        backdrop-filter: blur(3px);
+        color: rgb(185, 185, 185);
+        border-radius: 0 8px 8px 0;
+        padding: 0 0.2rem;
+        display: grid;
+        place-items: center;
+      }
+      .searchbar .submit svg {
+        fill: rgb(185, 185, 185);
+        height: 80%;
+      }
+
+      .links {
+        width: 50vw;
+        min-width: fit-content;
+        background-color: rgba(0, 0, 0, 0.3254901961);
+        backdrop-filter: blur(3px);
+        display: flex;
+        justify-content: space-around;
+        padding: 1rem;
+        border-radius: 16px;
+        display: none;
+      }
+
+      .card {
+        border: 5px solid var(--border);
+        cursor: pointer;
+        position: relative;
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 16px;
+        background-color: rgba(0, 0, 0, 0.3254901961);
+        backdrop-filter: blur(3px);
+      }
+
+      svg {
+        height: 2rem;
+        width: 2rem;
+      }
+
+      .card:hover:before {
+        background-position: 100% 100%;
+        transform: scale(1.04, 1.06);
+      }
+
+      .card:hover > .card-content {
+        background-position: -20% 0%;
+      }
+
+      .card:before {
+        border-radius: 16px;
+        background: linear-gradient(
+          130deg,
+          transparent 0% 33%,
+          var(--g1) 66%,
+          var(--g2) 83.5%,
+          var(--g3) 100%
+        );
+        background-position: 0% 0%;
+        background-size: 300% 300%;
+        content: "";
+        height: 120%;
+        width: 120%;
+        pointer-events: none;
+        position: absolute;
+        transition: background-position 350ms ease, transform 350ms ease;
+        z-index: 1;
+      }
+
+      .card-content {
+        /*background-image: radial-gradient(
+    rgba(255, 255, 255, 0.2) 8%,
+    transparent 8%
+  );
+  background-position: 0% 0%;
+  background-size: 2vh 2vh;*/
+        background-color: #121212;
+        height: 100%;
+        width: 100%;
+        padding: 0.5rem;
+        position: relative;
+        transition: background-position 350ms ease;
+        z-index: 2;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+      }
+
+      .card-title,
+      .card-subtitle {
+        color: white;
+        font-family: "Anek Latin", sans-serif;
+        font-weight: 400;
+        margin: 0px;
+      }
+
+      .toggle {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .toggle input {
+        background-color: rgba(0, 0, 0, 0.5058823529);
+        backdrop-filter: blur(3px);
+        border: none;
+        border-top: 2px solid rgba(255, 255, 255, 0.153);
+        width: 10vw;
+        min-width: fit-content;
+        padding: 0 0 0 0.5rem;
+        margin: 0;
+        color: rgb(185, 185, 185);
+      }
+      .toggle input:focus {
+        outline: none;
+      }
+      .toggle .button {
+        border: none;
+        border-top: 2px solid rgba(255, 255, 255, 0.153);
+        border-right: 2px solid rgba(255, 255, 255, 0.153);
+        background: rgba(0, 0, 0, 0.6470588235);
+        backdrop-filter: blur(3px);
+        color: rgb(185, 185, 185);
+        border-radius: 0 8px 0 0;
+        padding: 0 0.2rem;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+      }
+      .toggle .button svg {
+        fill: rgb(185, 185, 185);
+        height: 80%;
+      }
+      .toggle .button.clicked svg {
+        animation: 500ms cubic-bezier(0.29, -0.06, 0, 1.08) rotate forwards;
+      }
+
+      button.clicked * {
+        display: none;
+      }
+
+      #eSix {
+        --border: #262a92;
+        --g1: rgb(115, 149, 181);
+        --g2: rgb(57, 61, 136);
+        --g3: rgb(110, 76, 129);
+        fill: #1da1f2;
+      }
+
+      #twitter {
+        --border: #1da1f2;
+        --g1: rgb(0, 211, 234);
+        --g2: rgb(181, 64, 236);
+        --g3: rgb(253, 53, 96);
+        fill: #1da1f2;
+      }
+
+      #google {
+        --border: #ea4335;
+        --g1: rgb(0, 234, 62);
+        --g2: rgb(224, 236, 64);
+        --g3: rgb(253, 53, 53);
+        fill: #1da1f2;
+      }
+
+      @keyframes rotate {
+        from {
+          rotate: 0deg;
+        }
+        to {
+          rotate: 720deg;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="bgwrap">
+        <img loading="lazy" id="bg" src="" alt="" class="bg" />
+      </div>
+      <div class="searchbar">
+        <input type="text" id="search" />
+        <div class="submit" id="submit">
+          <svg
+            height="24.0"
+            viewBox="0 0 24.0 24.0"
+            width="24.0"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.5,14l-0.8,0l-0.3,-0.3c1,-1.1 1.6,-2.6 1.6,-4.2C16,5.9 13.1,3 9.5,3C5.9,3 3,5.9 3,9.5S5.9,16 9.5,16c1.6,0 3.1,-0.6 4.2,-1.6l0.3,0.3l0,0.8l5,5l1.5,-1.5L15.5,14zM9.5,14C7,14 5,12 5,9.5S7,5 9.5,5C12,5 14,7 14,9.5S12,14 9.5,14z"
+            />
+          </svg>
+        </div>
+      </div>
+      <div class="links">
+        <a class="card" id="eSix" href="https://www.e621.net/favorites">
+          <div class="card-content">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="0.4in"
+              height="0.4in"
+              viewBox="0 0 36 36"
+            >
+              <path
+                id="Ear Tops"
+                fill="#fdbe2f"
+                d="M 30.75,11.02
+           C 32.64,13.36 31.56,16.69 32.36,16.70
+             33.44,15.81 35.85,13.73 35.10,12.43
+             34.18,10.95 30.88,11.02 30.75,11.02 Z
+           M 20.27,6.17
+           C 20.20,4.77 19.90,0.94 18.50,0.76
+             16.95,0.72 15.22,2.73 15.03,3.00
+             16.53,3.19 19.53,4.38 20.27,6.17 Z"
+              />
+              <path
+                id="Ear Bottoms"
+                fill="#fff"
+                d="M 14.61,8.32
+           C 14.61,8.32 15.74,5.77 16.79,5.97
+             17.65,6.13 17.75,8.41 17.75,8.41
+             17.75,8.41 20.26,8.41 20.26,8.41
+             20.26,8.41 20.30,7.43 20.27,6.17
+             19.54,4.37 16.52,3.18 15.03,3.00
+             14.27,3.83 12.79,6.68 12.20,8.33
+             12.20,8.33 14.61,8.32 14.61,8.32 Z
+           M 26.73,13.88
+           C 26.73,13.88 29.44,13.24 29.92,14.20
+             30.30,14.98 28.55,16.43 28.55,16.43
+             28.55,16.43 30.06,18.45 30.06,18.45
+             30.06,18.45 31.41,17.50 32.36,16.70
+             31.55,16.69 32.70,13.48 30.75,11.02
+             29.57,10.99 26.95,11.43 25.27,11.96
+             25.27,11.96 26.73,13.88 26.73,13.88 Z"
+              />
+              <path
+                id="E Background"
+                fill="#fff"
+                d="M 22.82,23.03
+           C 22.73,19.99 22.20,17.43 19.42,15.70
+             14.72,12.75 8.27,16.10 8.04,21.76
+             8.27,29.59 16.55,31.93 20.85,27.10
+             20.85,27.10 18.81,25.21 18.81,25.21
+             16.04,27.32 13.68,27.06 11.52,23.93
+             11.52,23.93 22.82,23.03 22.82,23.03 Z
+           M 11.21,20.81
+           C 12.73,16.84 17.61,16.39 19.45,20.32
+             19.45,20.32 11.21,20.81 11.21,20.81 Z"
+              />
+              <path
+                id="Head"
+                fill="#00549e"
+                d="M 8.17,9.97
+           C 10.27,9.96 19.20,10.03 22.22,10.03
+             22.88,11.15 28.57,20.96 29.24,22.17
+             28.50,23.45 22.29,34.12 22.22,34.21
+             21.22,34.25 8.25,34.29 8.25,34.29
+             8.15,34.13 1.88,23.32 1.17,22.10
+             1.80,21.20 7.24,11.57 8.17,9.97 Z
+           M 22.82,23.03
+           C 22.73,19.99 22.20,17.43 19.42,15.70
+             14.72,12.75 8.27,16.10 8.04,21.76
+             8.27,29.59 16.55,31.93 20.85,27.10
+             20.85,27.10 18.81,25.21 18.81,25.21
+             16.04,27.32 13.68,27.06 11.52,23.93
+             11.52,23.93 22.82,23.03 22.82,23.03 Z
+           M 11.21,20.81
+           C 12.73,16.84 17.61,16.39 19.45,20.32
+             19.45,20.32 11.21,20.81 11.21,20.81 Z"
+              />
+            </svg>
+
+            <h4 class="card-subtitle"></h4></div
+        ></a>
+        <a class="card" id="twitter" href="https://www.twitter.com">
+          <div class="card-content">
+            <svg
+              role="img"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>Twitter</title>
+              <path
+                d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"
+              />
+            </svg>
+            <h4 class="card-subtitle"></h4></div
+        ></a>
+        <a class="card" id="google" href="https://www.google.com">
+          <div class="card-content">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 326667 333333"
+              shape-rendering="geometricPrecision"
+              text-rendering="geometricPrecision"
+              image-rendering="optimizeQuality"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+            >
+              <path
+                d="M326667 170370c0-13704-1112-23704-3518-34074H166667v61851h91851c-1851 15371-11851 38519-34074 54074l-311 2071 49476 38329 3428 342c31481-29074 49630-71852 49630-122593m0 0z"
+                fill="#4285f4"
+              />
+              <path
+                d="M166667 333333c44999 0 82776-14815 110370-40370l-52593-40742c-14074 9815-32963 16667-57777 16667-44074 0-81481-29073-94816-69258l-1954 166-51447 39815-673 1870c27407 54444 83704 91852 148890 91852z"
+                fill="#34a853"
+              />
+              <path
+                d="M71851 199630c-3518-10370-5555-21482-5555-32963 0-11482 2036-22593 5370-32963l-93-2209-52091-40455-1704 811C6482 114444 1 139814 1 166666s6482 52221 17777 74814l54074-41851m0 0z"
+                fill="#fbbc04"
+              />
+              <path
+                d="M166667 64444c31296 0 52406 13519 64444 24816l47037-45926C249260 16482 211666 1 166667 1 101481 1 45185 37408 17777 91852l53889 41853c13520-40185 50927-69260 95001-69260m0 0z"
+                fill="#ea4335"
+              />
+            </svg>
+            <h4 class="card-subtitle"></h4>
+          </div>
+        </a>
+      </div>
+      <div class="toggle">
+        <input type="text" id="tag" />
+        <div class="button" id="button">
+          <svg
+            id="update"
+            height="16.0"
+            viewBox="0 0 16.0 16.0"
+            width="16.0"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M14.3,6C13.6,3.1 11.1,1 8,1C5.7,1 3.7,2.2 2.5,4h1.2c1,-1.2 2.5,-2 4.2,-2c2.5,0 4.6,1.7 5.3,4H12l2,3l2,-3H14.3zM8,13c-2.5,0 -4.6,-1.7 -5.3,-4H4L2,6L0,9h1.7c0.7,2.9 3.2,5 6.3,5c2.3,0 4.3,-1.2 5.5,-3h-1.2C11.2,12.2 9.7,13 8,13z"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
+    <script type="text/javascript">
+      window.onload = function () {
+        const searchField = document.getElementById("search");
+        const submitSearch = document.getElementById("submit");
+        submitSearch.addEventListener("click", function () {
+          console.log("hello");
+          window.location.href =
+            "https://www.google.com/search?q=" + searchField.value;
+        });
 
-</body>
-
+        let tag = "";
+        let unSafe = "--";
+        let storedTag = window.localStorage.getItem("tag");
+        if (storedTag != "") {
+          tag = storedTag;
+        }
+        const tagBar = document.getElementById("tag");
+        tagBar.value = "";
+        const button = document.getElementById("button");
+        button.addEventListener("click", function () {
+          button.classList.add("clicked");
+          tag = tagBar.value;
+          if (tag === "reset" || tag == "") {
+            favoritesUrl =
+              "https://e621.net/posts.json?tags=fav:mandorinn+order:landscape+";
+            window.localStorage.setItem("tag", "");
+          } else {
+            if (tag.includes("-fav:mandorinn")) {
+              favoritesUrl =
+                "https://e621.net/posts.json?tags=order:landscape+" + tag;
+              window.localStorage.setItem("tag", tag);
+            } else {
+              favoritesUrl =
+                "https://e621.net/posts.json?tags=fav:mandorinn+order:landscape+" +
+                tag;
+              window.localStorage.setItem("tag", tag);
+            }
+          }
+          tagBar.value = "";
+          setTimeout(function () {
+            button.classList.toggle("clicked");
+          }, 500);
+          setTimeout(getBG, 0);
+        });
+        let favoritesUrl =
+          "https://e621.net/posts.json?tags=fav:mandorinn+order:landscape+" +
+          tag;
+        if (tag.includes(unSafe)) {
+          let unSafeTag = tag.replace(unSafe, ``);
+          console.log(unSafeTag);
+          favoritesUrl =
+            "https://e621.net/posts.json?tags=order:landscape+" + unSafeTag;
+          console.log(favoritesUrl);
+        }
+        async function getBG() {
+          const bg = document.getElementById("bg");
+          const response = await fetch(favoritesUrl);
+          const favs = await response.json();
+          const favList = favs.posts;
+          console.log(favList);
+          let i = Math.floor(Math.random() * favList.length);
+          if (favList.length == 0) {
+            bg.src = `https://static1.e621.net/data/66/2b/662b7fde500162596d9efd897c8e286c.jpg`;
+          }
+          if (favList[`${i}`].file.url.includes("webm")) {
+            bg.src = favList[`${i}`].sample.url;
+          } else {
+            bg.src = favList[`${i}`].file.url;
+          }
+          bg.onload = function () {
+            bg.classList.add("loaded");
+          };
+        }
+        setInterval(console.log(favoritesUrl), 3000);
+        getBG();
+      };
+    </script>
+  </body>
 </html>
