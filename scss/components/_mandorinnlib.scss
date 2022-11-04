@@ -1,0 +1,44 @@
+/* ----- REPLACE STRING ----- */
+@function str-replace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace +
+      str-replace(
+        str-slice($string, $index + str-length($search)),
+        $search,
+        $replace
+      );
+  }
+  @return $string;
+}
+/* ------ GAMEBOY COLOR PALETTE MAKER ------ */
+@function gbc-palette($color) {
+  $color: lighten($color, 30%);
+  $color: saturate($color, 0%);
+  @return $color;
+}
+/* ------ GAMEBOY DARK HUE MAKER -------- */
+@function gb-shift-dark($color) {
+  $color: lighten($color, 18%);
+  $color: desaturate($color, 45%);
+  $color: adjust-hue($color, -10deg);
+  @return $color;
+}
+/* ------ GAMEBOY LIGHT HUE MAKER -------- */
+@function gb-shift-light($color) {
+  $color: lighten($color, 9%);
+  $color: saturate($color, 36%);
+  $color: adjust-hue($color, -33deg);
+  @return $color;
+}
+/* ------ FULL STEP COLOR SWAPPER ------ */
+@function hueStep($color, $hueMulti) {
+  $color: adjust-hue($color, $hueMulti * 57.5);
+  @return $color;
+}
+/* ------- SIMPLE GRADIENT ------- */
+@function linGrad($color, $multiplier) {
+  $color: adjust-hue($color, 10deg + $multiplier);
+  $color: darken($color, 2% + $multiplier);
+  @return $color;
+}
