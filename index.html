@@ -58,7 +58,6 @@
           document.head.append(style);
           return (styleString) => (style.textContent = styleString);
         })();
-
         const searchField = document.getElementById("search");
         const submitSearch = document.getElementById("submit");
         submitSearch.addEventListener("click", function () {
@@ -67,10 +66,33 @@
               "https://www.google.com/search?q=" + searchField.value;
           }
         });
+        searchField.addEventListener("keydown", function (key) {
+          if (key.code === "Enter") {
+            //checks whether the pressed key is "Enter"
+            submitSearch.click();
+          }
+        });
         const bg = document.getElementById("bg");
+        let bgFit = window.localStorage.getItem("objectFit");
+        if ((bgFit = "contain")) {
+          bg.style.objectFit = "contain";
+        } else {
+          bg.style.objectFit = "cover";
+        }
         let tag = "rating:s";
         let unSafe = "-fav:mandorinn";
         const tagBar = document.getElementById("tagInp");
+        /* let commandInp = false;
+        tagBar.addEventListener("input", function () {
+          if (tagBar.value.includes("/") && commandInp == false) {
+            commandInp = true;
+            console.log("true");
+            if ((commandInp = true)) {
+              tagBar.value = "/contain";
+            }
+          }
+        }); */
+
         let storedTag = window.localStorage.getItem("tag");
         if (storedTag != "") {
           tag = storedTag;
@@ -84,22 +106,35 @@
           button.classList.add("clicked");
           if (tagBar.value === "") {
             getBG();
+
             return;
           } else {
             tag = tagBar.value;
 
-            if (tag === "reset") {
+            if (tag == "reset") {
               tag = "rating:s";
               favoritesUrl =
                 "https://e621.net/posts.json?tags=fav:mandorinn+order:landscape+" +
                 tag;
-              document.getElementById("containStyle").remove();
+              bg.style.objectFit = "cover";
+              if (document.getElementById("containStyle")) {
+                document.getElementById("containStyle").remove();
+              }
+              window.localStorage.setItem("objectFit", "cover");
               window.localStorage.setItem("tag", "rating:s");
               tagBar.placeholder = tag;
             } else {
               if (tag.includes("contain")) {
-                tag = tag.replace("contain", ``);
-                addStyle("#bg{object-fit:contain !important;}");
+                tag = tagBar.value.replace("contain", ``);
+                bg.style.objectFit = "contain";
+                /*addStyle("#bg{object-fit:contain !important;}");*/
+                window.localStorage.setItem("objectFit", "contain");
+              }
+              if (tag.includes("cover")) {
+                tag = tagBar.value.replace("cover", ``);
+                bg.style.objectFit = "cover";
+                /* addStyle("#bg{object-fit:cover !important;}"); */
+                window.localStorage.setItem("objectFit", "cover");
               }
               if (tag.includes(unSafe) || tag.includes(`${unSafe} `)) {
                 let unSafeTag = tag.replace(`${unSafe}`, ``);
@@ -122,6 +157,12 @@
           tagBar.value = "";
           button.classList.add("clicked");
           setTimeout(getBG, 0);
+        });
+        tagBar.addEventListener("keydown", function (key) {
+          if (key.code === "Enter") {
+            //checks whether the pressed key is "Enter"
+            button.click();
+          }
         });
         let favoritesUrl =
           "https://e621.net/posts.json?tags=fav:mandorinn+order:landscape+" +
