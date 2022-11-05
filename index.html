@@ -82,17 +82,10 @@
         let tag = "rating:s";
         let unSafe = "-fav:mandorinn";
         const tagBar = document.getElementById("tagInp");
-        /* let commandInp = false;
-        tagBar.addEventListener("input", function () {
-          if (tagBar.value.includes("/") && commandInp == false) {
-            commandInp = true;
-            console.log("true");
-            if ((commandInp = true)) {
-              tagBar.value = "/contain";
-            }
-          }
-        }); */
-
+        tagBar.addEventListener("input", function (inp) {
+          inp = tagBar.value.replace(" ", "+");
+          tagBar.value = inp;
+        });
         let storedTag = window.localStorage.getItem("tag");
         if (storedTag != "") {
           tag = storedTag;
